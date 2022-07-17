@@ -1,18 +1,21 @@
 <template>
     <view class="home-container-bottom">
-            <view class="home-container-bottom-container">
-                <view class="home-container-bottom-left"  bindtap="switchTab('left')">
-                    <image class="home-container-bottom-left-image" src="{{left}}{{active_tab === 'left' ? '_active' : ''}}.png"/>
-                </view>
-                <view class="home-container-bottom-right" bindtap="switchTab('right')">
-                    <image class="home-container-bottom-right-image" src="{{right}}{{active_tab === 'right' ? '_active' : ''}}.png"/>
-                </view>
+        <view class="home-container-bottom-container">
+            <view class="home-container-bottom-left"  bindtap="switchTab('left')">
+                <image class="home-container-bottom-left-image" src="{{left}}{{active_tab === 'left' ? '_active' : ''}}.png"/>
+            </view>
+            <view class="home-container-bottom-right" bindtap="switchTab('middle')">
+                <view>认领茶树</view>
+            </view>
+            <view class="home-container-bottom-right" bindtap="switchTab('right')">
+                <image class="home-container-bottom-right-image" src="{{right}}{{active_tab === 'right' ? '_active' : ''}}.png"/>
             </view>
         </view>
+    </view>
 </template>
 <script>
   import mpx, { createComponent } from '@mpxjs/core'
-  import IndexPage from '../pages/index?resolve' 
+  import IndexPage from '../pages/index?resolve'
   import myPage from '../pages/my?resolve'
   import store from '../store'
   createComponent({
@@ -27,7 +30,7 @@
       ...store.mapMutations(['setSwitchTab']),
       switchTab(tab_type) {
           if (this.active_tab === tab_type) {
-              return 
+              return
           } else {
               this.setSwitchTab(tab_type)
               mpx.switchTab({

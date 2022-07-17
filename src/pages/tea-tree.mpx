@@ -1,0 +1,172 @@
+<template>
+  <view class="field" bind:tap="pageTapClick">
+    <canvas type="2d" id="myCanvas" canvas-id="myCanvas"></canvas>
+    <view
+      id="maskGrey"
+      class="mask_grey"
+      style="display: {{selectedField ? 'unset' : 'none'}}"
+    ></view>
+    <image id="box" src="/image/bg.jpg" class="img_bg" />
+    <image
+      wx:for="{{fields}}"
+      id="{{item.id}}"
+      src="{{item.path}}"
+      class="field_item"
+      style="width: {{item.width}}rpx; height: {{item.height}}rpx; left: {{item.left}}rpx; top: {{item.top}}rpx; z-index: {{item.id === selectedField.id ? 1000 : 10}}"
+    />
+  </view>
+</template>
+
+<script>
+  import mpx, { createPage } from '@mpxjs/core'
+  import store from '../store'
+  createPage({
+    data: {
+      cWidth: 750, // 设计稿的宽度
+      rateW: 0,
+      selectedField: null, // 选中的田地
+      fields: [
+        {
+          path: '/image/tiandi01.png',
+          width: 100,
+          height: 150,
+          left: 100,
+          top: 100,
+          id: 1,
+        },
+        {
+          path: '/image/tiandi02.png',
+          width: 100,
+          height: 150,
+          left: 156,
+          top: 87,
+          id: 2,
+        },
+        {
+          path: '/image/tea01.png',
+          width: 100,
+          height: 100,
+          left: 100,
+          top: 300,
+          id: 3,
+        },
+        {
+          path: '/image/tea02.png',
+          width: 100,
+          height: 100,
+          left: 201,
+          top: 300,
+          id: 4,
+        },
+      ],
+    },
+    methods: {
+      pageTapClick(event) {
+        this.selectedField = null
+        // this.setData({ selectedField: null })
+        mpx.setPageStyle({
+          style: { overflow: 'unset' },
+        })
+        // 获取点击位置相对于页面的位置
+        const pageX = Math.round(this.data.rateW * event.touches[0].pageX)
+        const pageY = Math.round(this.data.rateW * event.touches[0].pageY)
+        // 获取符合该点位置的田地
+        const clickedField = this.data.fields.filter((field) => {
+          return (
+            field.left <= pageX &&
+            field.left + field.width >= pageX &&
+            field.top <= pageY &&
+            field.top + field.height >= pageY
+          )
+        })
+        if (!clickedField.length) return
+        // 获取点击的点在田地里的相对位置
+        clickedField.map((field) => {
+          this.getImgData(
+            field,
+            Math.round((pageX - field.left) / this.data.rateW),
+            Math.round((pageY - field.top) / this.data.rateW)
+          ).then((selectedField) => {
+            selectedField && !this.data.selectedField && this.dealField(selectedField)
+          })
+        })
+      },
+      getImgData(field, offsetLeft, offsetTop) {
+        return new Promise((resolve, reject) => {
+          wx.createSelectorQuery()
+            .select('#myCanvas')
+            .fields({ node: true, size: true })
+            .exec((res) => {
+              const canvas = res[0].node
+              const ctx = canvas.getContext('2d')
+              // 初始化画布大小
+              canvas.width = res[0].width
+              canvas.height = res[0].height
+              const image = canvas.createImage()
+              image.src = field.path
+              // 图片加载完成回调
+              image.onload = () => {
+                // 获取田地实际大小
+                const fw = field.width / this.data.rateW
+                const fh = field.height / this.data.rateW
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.drawImage(image, 0, 0, fw, fh)
+                const imageData = ctx.getImageData(0, 0, fw, fh)
+                const offsetPosIndex = 4 * (offsetTop * fw + offsetLeft) - 1
+                // 判断是否有像素，确认是否选中图片
+                if (
+                  imageData.data[offsetPosIndex - 3] +
+                  imageData.data[offsetPosIndex - 2] +
+                  imageData.data[offsetPosIndex - 1]
+                )
+                  resolve(field)
+              }
+            })
+        })
+      },
+      dealField(selectedField) {
+        this.selectedField = selectedField
+        // this.setData({ selectedField })
+        mpx.setPageStyle({
+          style: { overflow: 'hidden' },
+        })
+      },
+    },
+    onShow() {
+      this.rateW = this.data.cWidth / wx.getSystemInfoSync().windowWidth;
+      // this.setData({
+      //   rateW: this.data.cWidth / wx.getSystemInfoSync().windowWidth,
+      // })
+    },
+  })
+</script>
+<style lang="stylus">
+  .field
+    position relative
+  .field #myCanvas
+    position absolute
+    top -1300rpx
+    left -900rpx
+    z-index -99
+  .field .img_bg
+    position absolute
+    width 750rpx
+    height 1500rpx
+    z-index 1
+  .field .mask_grey
+    display none
+    position fixed
+    width 100%
+    height 100%
+    z-index 100
+    background-color rgb(0, 0, 0, 0.5)
+  .field .field_item
+    position absolute
+    z-index 10
+</style>
+<script type="application/json">
+  {
+    "navigationBarTitleText": "认领田地",
+    "usingComponents": {}
+  }
+</script>

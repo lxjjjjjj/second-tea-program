@@ -27,13 +27,17 @@
       "./pages/my-edit.mpx",
       "./pages/oops.mpx",
       "./pages/person.mpx",
-      "./pages/real.mpx"
+      "./pages/real.mpx",
+      "./pages/tea-tree.mpx"
     ],
     "tabBar": {
       "custom": true,
       "list": [{
         "pagePath": "pages/index",
         "text": "首页"
+      }, {
+        "pagePath": "pages/tea-tree",
+        "text": "认领茶树"
       }, {
         "pagePath": "pages/my",
         "text": "我的"

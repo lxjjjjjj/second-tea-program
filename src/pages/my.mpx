@@ -1,0 +1,356 @@
+<template>
+    <view class="app-image my-wrapper">
+        <view class="my-container" srcoll-y="true" show-scrollbar="false" enable-flex="true">
+            <view class="my-top" wx:if="{{userInfo}}">
+                <view class="my-avatar" bindtap="goToPerson"><image src="{{userInfo.logo || avatarUrl || defaultAvatar}}"/></view>
+                <view>
+                    <view class="my-class">
+                        <view class="my-class-msg">V{{userInfo.userLevel}}画家</view>
+                        <image class="my-class-image" src="https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E7%94%BB%E5%AE%B6BG%403x.png"/>
+                    </view>
+                    <view class="my-name">{{userInfo.nickName || nickName}}</view>
+                </view>
+                <view>
+                    <view class="my-real" wx:if="{{!identityType}}"></view>
+                    <view class="my-real-already" wx:if="{{identityType}}">已实名</view>
+                    <view class="my-couponCount">
+                        电子券
+                        <view class="my-couponNum">{{userInfo.couponCount}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="my-vip" wx:if="{{userInfo}}">
+                <view class="my-vip-content">
+                    <view class="my-vip-title"/>
+                    <view class="my-vip-level">{{userInfo.userLevel}}</view>
+                </view>
+                <view class="my-vip-detail"/>
+                <view class="my-vip-score">积分 {{userInfo.score}}</view>
+                <view class="my-vip-address"/>
+                <view class="my-vip-address-value">{{userInfo.walletAddr}}</view>
+            </view>
+            <view class="my-times">
+                <view class="my-times-img"/>
+                <view class="my-times-title">创作次数 </view>
+                <view class="my-times-value">{{userInfo.creationNftCount}}</view>
+                <view class="my-times-go"></view>
+            </view>
+            <view class="collect-container">
+                <view class="collect-top">
+                    <view class="collect-title"/>
+                    <view class="collect-size" wx:if="{{userNFTAll}}">（{{userNFTAll.length}}）</view>
+                </view>
+                <view class="collect-list" wx:if="{{userNFTAll && userNFTAll.length}}">
+                    <view class="collect-item" wx:for="{{userNFTAll}}" wx:key="item">
+                        <view class="collect-item-wrapper">
+                            <image mode="widthFix" class="collect-picture" src="{{item.url}}"/>
+                            <view class="collect-name">{{item.name}}</view>
+                            <view class="collect-ID">数字藏品ID : {{item.tokenId || '待铸造'}}</view>
+                            <view class="collect-desc" wx:if="{{item.summary}}">作品描述 : {{item.summary}}</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <custom-tab-bar/>
+    </view>
+</template>
+
+<script>
+import mpx,{ createPage } from '@mpxjs/core'
+import store from '../store'
+import personPage from './person?resolve'
+createPage({
+    data: {
+    defaultAvatar: "https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E5%A4%B4%E5%83%8F%E9%81%AE%E7%BD%A9%403x.png"
+    },
+    computed:{
+        ...store.mapState(['userInfo','userNFTAll','avatarUrl','nickName','identityType'])
+    },
+    methods:{
+        ...store.mapActions(['getUserInfo','getUserNFTAll']),
+        goToPerson(){
+            mpx.navigateTo({
+                url:personPage
+            })
+        }
+    },
+    onShow(){
+        this.getUserInfo()
+        this.getUserNFTAll()
+    }
+});
+</script>
+<style lang="stylus">
+    .my-wrapper
+        background-size 100% 100%
+        min-height 100vh
+        height 100%
+        width 100vw
+    .my-real
+        background url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E5%BE%85%E5%AE%9E%E5%90%8D%E8%AE%A4%E8%AF%81%403x.png')
+        background-size 100% 100%
+        height 20px
+        width 57px
+        &-already
+            font-size 11px
+            font-family SourceHanSansOLD-Normal
+            color #464b5f
+    .my-couponCount
+        font-size 10px
+        font-family SourceHanSansOLD-Normal
+        color #ffffff
+        display flex
+        align-items center
+        width 57px
+    .my-couponNum
+        font-size 15px
+        font-family SourceHanSansOLD-Normal
+        color #98D661
+        margin-left 15px
+    .my-container
+        height calc(100vh - 85px)
+        width calc(100vw - 40px)
+        margin 0 20px
+        margin-bottom 85px
+        overflow-y scroll
+        -webkit-overflow-scrolling: touch
+    .my-container::-webkit-scrollbar
+        display none
+        -webkit-overflow-scrolling: touch
+    .my-top
+        width 100%
+        display flex
+        align-items center
+        padding 10px 0
+        position relative
+    .my-times
+        position relative
+        background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/mytimesbg%403x.png')
+        background-size 100% 100%
+        width 100%
+        height 62px
+        margin-bottom 15px
+        display flex
+        align-items center
+        &-img
+            height 54px
+            width 56px
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E5%9B%BE%E6%A0%87%403x.png')
+            background-size 100% 100%
+            margin-left 12px
+        &-title
+            font-size 14px
+            font-family SourceHanSansOLD-Bold
+            color #ffffff
+            margin-left 10px
+        &-value
+            color #FEE170
+            font-size 14px
+            font-family SourceHanSansOLD-Normal
+            margin-left 5px
+        &-go
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E7%AE%AD%E5%A4%B4%403x.png')
+            background-size 100% 100%
+            height 15px
+            width 9px
+            position absolute
+            right 16px
+    .my-class
+        width 50px
+        height 18px
+        position relative
+        &-msg
+            font-size 12px
+            font-family SourceHanSansOLD-Normal
+            color #fff
+            position absolute
+            left 50%
+            top 50%
+            transform translate(-50%,-50%)
+            z-index 4
+            width 40px
+        &-image
+            width 50px
+            height 18px
+            position absolute
+            left 50%
+            top 50%
+            transform translate(-50%,-50%)
+    .my-avatar
+        background url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E5%A4%B4%E5%83%8F%E6%A1%86%403x.png')
+        background-size 100% 100%
+        width 62px
+        height 66px
+        display flex
+        align-items center
+        justify-content center
+        position relative
+        image
+            height: 50px;
+            width: 47px;
+            border-radius: 50%;
+            position: absolute;
+            left: 7px;
+            top: 7px;
+    .my-name
+        font-size 16px
+        font-family SourceHanSansOLD-Normal
+        color #ffffff
+        font-weight 500
+        width 80px
+        text-overflow ellipsis
+        overflow hidden
+        white-space nowrap
+    .my-coupon
+        background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E5%8D%A1%E5%8C%85%403x.png')
+        background-size 100% 100%
+        width 60px
+        height 40px
+        position absolute
+        right 20px
+        &-num
+            width 24px
+            height 14px
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%95%B0%E9%87%8F%E6%8F%90%E7%A4%BA%E8%83%8C%E6%99%AF%403x.png')
+            background-size 100% 100%
+            position absolute
+            right -3px
+            top -4px
+            text-align center
+            font-size 12px
+            font-family SourceHanSansOLD-Normal
+            color #fff
+            line-height 14px
+    .my-vip
+        background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/VIP%E8%83%8C%E6%99%AF1%403x.png')
+        background-size 100% 100%
+        width 100%
+        height 174px
+        position relative
+        display flex
+        &-content
+            height 18px
+            display flex
+            align-items center
+            padding 30px 0 0 30px
+        &-level
+            margin-left 10px
+            font-size 20px
+            font-family SourceHanSansOLD-Normal
+            color #fff
+        &-title
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/VIP%403x.png')
+            background-size 100% 100%
+            height 18px
+            width 48px
+        &-detail
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%9F%A5%E7%9C%8B%E7%89%B9%E6%9D%83%403x.png')
+            background-size 100% 100%
+            height 30px
+            width 80px
+            position  absolute
+            right 30px
+            top 25px
+        &-score
+            color #FADC78
+            font-size 12px
+            font-family SourceHanSansOLD-Normal
+            height 15px
+            position absolute
+            top 60px
+            left 30px
+        &-address
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E9%92%B1%E5%8C%85%E5%9C%B0%E5%9D%80%403x.png')
+            background-size 100% 100%
+            height 10px
+            width 44px
+            position  absolute
+            left 30px
+            top 100px
+        &-address-value
+            height 20px
+            width calc(100% - 70px)
+            font-size 12px
+            font-family SourceHanSansOLD-Normal
+            color #fff
+            position absolute
+            left 30px
+            top 115px
+            text-overflow ellipsis
+            overflow hidden
+            white-wrap nowrap
+    .collect
+        height 100px
+        width 100%
+        margin-top 10px
+        margin-bottom 10px
+        &-title
+            width 36px
+            height 18px
+            background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E8%97%8F%E5%93%81%403x.png')
+            background-size 100% 100%
+        &-size
+            font-size 15px
+            font-family SourceHanSansOLD-Normal
+            color #6171AB
+            font-family SourceHanSansOLD-Normal
+        &-item
+            width 158px
+            min-height 160px
+            margin 10px 0
+        &-item-wrapper
+            width 134px
+            min-height 150px
+            padding 12px
+            background-color: rgba(255,255,255,0.08)
+            border-radius 10px
+        &-top
+            display flex
+            align-items center
+            height 30px
+            padding 0 10px
+        &-list
+            display flex
+            flex-wrap wrap
+            justify-content space-between
+        &-image
+            height 30px
+            width 30px
+            border-radius 15px
+        &-name
+            font-size 15px
+            font-family SourceHanSansOLD-Normal
+            color #fff
+        &-ID
+            color #696E88
+            font-size 9px
+            font-family SourceHanSansOLD-Normal
+            margin-top 5px
+            width 134px
+            text-overflow ellipsis
+            overflow hidden
+            white-space nowrap
+        &-desc
+            font-size 12px
+            font-family SourceHanSansOLD-Normal
+            color #ADC6F4
+            margin-top 5px
+            text-overflow ellipsis
+            white-space nowrap
+            overflow hidden
+        &-picture
+            width 134px
+            height 148px
+            border-radius 5px
+        &-container
+            width 100%
+
+</style>
+<script type="application/json">
+{
+    "usingComponents": {
+        "custom-tab-bar":"../custom-tab-bar/index.mpx"
+    }
+}
+</script>

@@ -167,6 +167,8 @@
 <script type="application/json">
   {
     "navigationBarTitleText": "认领田地",
-    "usingComponents": {}
+    "usingComponents": {
+      "custom-tab-bar":"../custom-tab-bar/index.mpx"
+    }
   }
 </script>

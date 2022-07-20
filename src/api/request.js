@@ -18,9 +18,9 @@ export default ({url,params,method="GET"}) => {
             success (res) {
                 // wx.hideLoading()
                 if (res.statusCode === 403) {
-                    mpx.navigateTo({
-                        url: LoginPage
-                    })
+                    // mpx.navigateTo({
+                    //     url: LoginPage
+                    // })
                 } else if(String(res.statusCode).startsWith('5')){
                     mpx.navigateTo({
                         url: oopsPage
@@ -32,9 +32,9 @@ export default ({url,params,method="GET"}) => {
             fail (reason) {
                 console.log('reason',reason)
                 // wx.hideLoading()
-                mpx.navigateTo({
-                    url: LoginPage
-                })
+                // mpx.navigateTo({
+                //     url: LoginPage
+                // })
                 reject(reason)
             }
         })

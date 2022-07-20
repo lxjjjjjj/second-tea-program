@@ -118,7 +118,7 @@ createPage({
                     this.region[index] = this.showArray[index][item].areaName
                 }
             })
-            this.$forceUpdate()
+            // this.$forceUpdate()
         },
         bindfocus(type){
             this.rulesMap[type] = false

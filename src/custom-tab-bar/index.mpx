@@ -1,57 +1,67 @@
 <template>
-    <view class="home-container-bottom">
-        <view class="home-container-bottom-container">
-            <view class="home-container-bottom-left"  bindtap="switchTab('left')">
-                <image class="home-container-bottom-left-image" src="{{left}}{{active_tab === 'left' ? '_active' : ''}}.png"/>
-            </view>
-            <view class="home-container-bottom-right" bindtap="switchTab('middle')">
-                <view>认领茶树</view>
-            </view>
-            <view class="home-container-bottom-right" bindtap="switchTab('right')">
-                <image class="home-container-bottom-right-image" src="{{right}}{{active_tab === 'right' ? '_active' : ''}}.png"/>
-            </view>
-        </view>
+  <view class="home-container-bottom">
+    <view class="home-container-bottom-container">
+      <view class="home-container-bottom-left" bindtap="switchTab('left')">
+        <image
+          class="home-container-bottom-left-image"
+          src="{{left}}{{active_tab === 'left' ? '_active' : ''}}.png"
+        />
+      </view>
+      <view class="home-container-bottom-right" bindtap="switchTab('middle')">
+        <view>认领茶树</view>
+      </view>
+      <view class="home-container-bottom-right" bindtap="switchTab('right')">
+        <image
+          class="home-container-bottom-right-image"
+          src="{{right}}{{active_tab === 'right' ? '_active' : ''}}.png"
+        />
+      </view>
     </view>
+  </view>
 </template>
 <script>
   import mpx, { createComponent } from '@mpxjs/core'
   import IndexPage from '../pages/index?resolve'
+  import TeaTreePage from '../pages/tea-tree?resolve'
   import myPage from '../pages/my?resolve'
   import store from '../store'
   createComponent({
-    data:{
-        left:"https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE_%E5%A4%A7%E5%8E%85",
-        right:"https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE_%E6%88%91%E7%9A%84"
+    data: {
+      left: 'https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE_%E5%A4%A7%E5%8E%85',
+      right: 'https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE_%E6%88%91%E7%9A%84',
     },
-    computed:{
-      ...store.mapState(['active_tab'])
+    computed: {
+      ...store.mapState(['active_tab']),
     },
     methods: {
       ...store.mapMutations(['setSwitchTab']),
       switchTab(tab_type) {
-          if (this.active_tab === tab_type) {
-              return
-          } else {
-              this.setSwitchTab(tab_type)
-              mpx.switchTab({
-                  url: this.active_tab==='left' ? IndexPage : myPage
-              })
-          }
-      }    
+        if (this.active_tab === tab_type) return;
+        this.setSwitchTab(tab_type)
+        mpx.switchTab({
+          url: this.exportPage(tab_type)
+        })
+      },
+      exportPage(type) {
+        if (type === "left") return IndexPage
+        else if (type === "middle") return TeaTreePage
+        else return myPage
+      }
     },
-    pageLifetimes:{
-        show(){
-            mpx.switchTab({
-                url: this.active_tab==='left' ? IndexPage : myPage
-            })
-        }
-    }
-  });
+    pageLifetimes: {
+      show() {
+        mpx.switchTab({
+          url: this.exportPage(this.active_tab)
+        })
+      },
+    },
+  })
 </script>
 
 <style lang="stylus">
-.home-container-bottom
+  .home-container-bottom
     position fixed
+    z-index 100
     height 85px
     right 0
     left 0
@@ -60,30 +70,29 @@
     justify-content center
     align-items center
     &-container
-        width 270px
-        height 65px
-        display flex
-        background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE%E8%83%8C%E6%99%AF%403x.png')
-        background-size 100% 100%
+      width 270px
+      height 65px
+      display flex
+      background-image url('https://qa-yimu.oss-accelerate.aliyuncs.com/test/%E6%8C%89%E9%92%AE%E8%83%8C%E6%99%AF%403x.png')
+      background-size 100% 100%
     &-left
-        height 100%
-        width 135px
-        display flex
-        align-items center
-        justify-content center
-        &-image
-            width 55px
-            height 21px
+      height 100%
+      width 135px
+      display flex
+      align-items center
+      justify-content center
+      &-image
+        width 55px
+        height 21px
     &-right
-        height 100%
-        width 135px
-        display flex
-        align-items center
-        justify-content center
-        &-image
-            width 55px
-            height 21px
-        
+      height 100%
+      width 135px
+      display flex
+      align-items center
+      justify-content center
+      &-image
+        width 55px
+        height 21px
 </style>
 
 <script type="application/json">

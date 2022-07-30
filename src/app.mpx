@@ -31,7 +31,6 @@
       "./pages/tea-tree.mpx"
     ],
     "tabBar": {
-      "custom": true,
       "list": [{
         "pagePath": "pages/index",
         "text": "首页"

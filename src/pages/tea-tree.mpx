@@ -14,7 +14,6 @@
       class="field_item"
       style="width: {{item.width}}rpx; height: {{item.height}}rpx; left: {{item.left}}rpx; top: {{item.top}}rpx; z-index: {{selectedField && (item.id === selectedField.id) ? 1000 : 10}}"
     />
-    <custom-tab-bar/>
   </view>
 </template>
 
@@ -168,7 +167,6 @@
   {
     "navigationBarTitleText": "认领田地",
     "usingComponents": {
-      "custom-tab-bar":"../custom-tab-bar/index.mpx"
     }
   }
 </script>

@@ -1,7 +1,6 @@
 <template>
   <!-- TODO 首页-->
   <!-- 自定义tabbar-->
-  <custom-tab-bar />
 </template>
 
 <script>
@@ -15,7 +14,6 @@
 <script type="application/json">
   {
     "usingComponents": {
-      "custom-tab-bar":"../custom-tab-bar/index.mpx"
     }
   }
 </script>

@@ -52,7 +52,6 @@
                 </view>
             </view>
         </view>
-        <custom-tab-bar/>
     </view>
 </template>
 
@@ -350,7 +349,6 @@ createPage({
 <script type="application/json">
 {
     "usingComponents": {
-        "custom-tab-bar":"../custom-tab-bar/index.mpx"
     }
 }
 </script>

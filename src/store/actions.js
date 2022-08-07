@@ -610,3 +610,155 @@ export function getDisplayNFTById(context, params){
         console.log('获取nft详情失败',JSON.stringify(err))
     })
 }
+
+export function addOrder(context, params){
+    return request({
+        url:apis.addOrderAPI,
+        params,
+        method: 'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('购买失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            wx.showModal({
+                title:'购买成功',
+                showCancel:false
+            })
+            return Promise.resolve(res.data)
+        }
+    }).catch(err => {
+        console.log('购买失败',JSON.stringify(err))
+    })
+}
+export function getTeaParcelList(context, params){
+    context.commit('setTeaList', [])
+    request({
+        url:`${apis.teaParcelListAPI}`,
+        params:{
+            pageNum: 1,
+            pageSize: 20
+        },
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('获取地块列表详情失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            context.commit('setTeaList',res.data)
+        }
+    }).catch(err => {
+        console.log('获取地块列表详情失败',JSON.stringify(err))
+    })
+}
+export function getOrderList(context, params){
+    context.commit('setOrderList', [])
+    request({
+        url:`${apis.orderListAPI}`,
+        params:{
+            pageNum: 1,
+            pageSize: 20
+        },
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('获取订单列表详情失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            context.commit('setOrderList',res.data.list)
+        }
+    }).catch(err => {
+        console.log('获取订单列表详情失败',JSON.stringify(err))
+    })
+}
+export function getGiveOrder(context, params){
+    context.commit('setGiveOrder', null)
+    request({
+        url:`${apis.getGiveOrderAPI}`,
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('获取赠送订单详情失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            context.commit('setGiveOrder',res.data)
+        }
+    }).catch(err => {
+        console.log('获取赠送订单详情失败',JSON.stringify(err))
+    })
+}
+export function getOrderPayInfo(context, params){
+    context.commit('setOrderPayInfo', null)
+    return request({
+        url:`${apis.getOrderPayInfoAPI}`,
+        params: params,
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('获取订单支付详情失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            context.commit('setOrderPayInfo',res.data)
+            return Promise.resolve(res.data)
+        }
+    }).catch(err => {
+        console.log('获取订单支付详情失败',JSON.stringify(err))
+    })
+}
+export function giveOrder(context, params){
+    return request({
+        url:`${apis.giveOrderAPI}`,
+        params:params,
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('赠送订单失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            wx.showModal({
+                title:'赠送订单成功',
+                showCancel:false
+            })
+            Promise.resolve(res.data)
+        }
+    }).catch(err => {
+        console.log('赠送订单失败',JSON.stringify(err))
+    })
+}
+export function receiveOrder(context, params){
+    context.commit('setReceiveOrder', null)
+    request({
+        url:`${apis.receiveOrderAPI}`,
+        method:'POST'
+    }).then(res => {
+        if(Number(res.code)){
+            console.log('获取赠送订单详情失败',JSON.stringify(res.msg))
+            wx.showModal({
+                title:res.msg,
+                showCancel:false
+            })
+        }else{
+            context.commit('setReceiveOrder',res.data)
+        }
+    }).catch(err => {
+        console.log('获取赠送订单详情失败',JSON.stringify(err))
+    })
+}

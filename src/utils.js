@@ -121,3 +121,13 @@ export function formatExactDate(time){
   const s = date.getSeconds().length === 1 ? '0' + date.getSeconds() : date.getSeconds()
   return `${year}-${month}-${day} ${h}:${m}:${s}`
 }
+export function formatParams(params){
+  if(params && Object.keys(params).length){
+    return Object.keys(params).reduce((acc, key) => {
+      acc += key + "=" + params[key] + '&'
+      return acc
+    }, '')
+  } else {
+    return ''
+  }
+}

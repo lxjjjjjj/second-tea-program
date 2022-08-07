@@ -47,3 +47,18 @@ export const editPersonInfoAPI = host + '/api/v1/user/updateUserInfo'
 export const fillUserInfoAPI = host + '/api/v1/user/fillUserInfo'
 // 新增展览馆根据id获取详情
 export const getDisplayNFTByIdAPI = host + '/api/v1/nft/query'
+
+// 地块列表
+export const teaParcelListAPI = host + '/api/v1/teaParcel/list'
+// 新增选地订单接口
+export const addOrderAPI = host + '/api/v1/order/addOrder'
+// 用户订单列表
+export const orderListAPI = host + '/api/v1/order/getListByUserId'
+// 获取用户订单支付信息
+export const getOrderPayInfoAPI = host + '/api/v1/order/getOrderPayInfo'
+// 赠送订单
+export const giveOrderAPI = host + '/api/v1/order/giveOrder'
+// 获取赠送订单信息
+export const getGiveOrderAPI = host + '/api/v1/order/getGiveOrderInfo'
+// 领取订单
+export const receiveOrderAPI = host + '/api/v1/order/receiveOrder'

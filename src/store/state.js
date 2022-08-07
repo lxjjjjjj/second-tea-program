@@ -29,7 +29,14 @@ const state = {
     codeCountDown:60,
     codeTimer:null,
     showSendBtn: true,
-    isAppHide:false
+    isAppHide:false,
+    teaList: [],
+    selectFieldID: '',
+    seletedAddr: null,
+    orderList: [],
+    giveOrder: null,
+    orderPayInfo: null,
+    receiveOrder: null
 }
 
 export default state

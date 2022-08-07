@@ -14,6 +14,7 @@
       class="field_item"
       style="width: {{item.width}}rpx; height: {{item.height}}rpx; left: {{item.left}}rpx; top: {{item.top}}rpx; z-index: {{selectedField && (item.id === selectedField.id) ? 1000 : 10}}"
     />
+    <view wx:if="{{selectedField}}" class="selectBtn" bindtap="selectField">确认认领</view>
   </view>
 </template>
 
@@ -24,6 +25,7 @@
   const TIAN_DI2 = require('../image/tiandi02.png')
   const TEA1 = require('../image/tea01.png')
   const TEA2 = require('../image/tea02.png')
+  const payPage = require('./pay?resolve')
   createPage({
     data: {
       cWidth: 750, // 设计稿的宽度
@@ -36,7 +38,7 @@
           height: 150,
           left: 100,
           top: 100,
-          id: 1,
+          id: '001',
         },
         {
           path: TIAN_DI2,
@@ -44,7 +46,7 @@
           height: 150,
           left: 156,
           top: 87,
-          id: 2,
+          id: '002',
         },
         {
           path: TEA1,
@@ -52,7 +54,7 @@
           height: 100,
           left: 100,
           top: 300,
-          id: 3,
+          id: '003',
         },
         {
           path: TEA2,
@@ -60,11 +62,13 @@
           height: 100,
           left: 201,
           top: 300,
-          id: 4,
+          id: '004',
         },
       ],
     },
     methods: {
+      ...store.mapMutations(['setSelectFieldID']),
+      ...store.mapActions(['getTeaParcelList']),
       pageTapClick(event) {
         this.selectedField = null
         mpx.setPageStyle({
@@ -133,8 +137,15 @@
           style: { overflow: 'hidden' },
         })
       },
+      selectField(){
+        this.setSelectFieldID(this.selectedField.id) 
+        mpx.navigateTo({
+          url: `${payPage}?teaParcelNo=${this.selectedField.id}`,
+        })
+      }
     },
     onShow() {
+      this.getTeaParcelList()
       this.data.rateW = this.data.cWidth / wx.getSystemInfoSync().windowWidth;
     }
   })
@@ -162,6 +173,20 @@
   .field .field_item
     position absolute
     z-index 10
+  .selectBtn
+    width 200px
+    height 40px
+    border-radius 10px
+    background green
+    z-index 101
+    font-size 24px
+    color #fff
+    text-align center
+    line-height 40px
+    position fixed
+    left 50%
+    transform translateX(-50%)
+    bottom 30px
 </style>
 <script type="application/json">
   {

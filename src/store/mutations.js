@@ -103,3 +103,24 @@ export function setShowSendBtn(state, data){
 export function setIsAppHide(state, data){
   state.isAppHide = data
 }
+export function setTeaList(state, data){
+  state.teaList = data
+}
+export function setSelectFieldID(state, data){
+  state.selectFieldID = data
+}
+export function setSelectAddr(state, data){
+  state.seletedAddr = data
+}
+export function setOrderList(state, data){
+  state.orderList = data
+}
+export function setGiveOrder(state, data){
+  state.giveOrder = data
+}
+export function setOrderPayInfo(state, data){
+  state.orderPayInfo = data
+}
+export function setReceiveOrder(state, data){
+  state.receiveOrder = data
+}

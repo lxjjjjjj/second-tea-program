@@ -1,0 +1,58 @@
+<template>
+  <view class="app-image order">
+      <view class="order-list" wx:if="{{orderInfo}}">
+        <view>地块名称：{{orderInfo.orderName}}</view>
+        <view>购买总数:{{orderInfo.num}}</view>
+        <view>购买金额:{{orderInfo.totalText}}</view>
+      </view>
+      <view class="receive" bindtap="receive">领取</view>
+  </view>
+</template>
+
+<script>
+  import mpx, { createPage } from '@mpxjs/core'
+  import store from '../store'
+  
+  createPage({
+    data: {
+      presentedCode: ''
+    },
+    methods: {
+      ...store.mapActions(['receiveOrder','getGiveOrder']),
+      receive(){
+          this.receiveOrder({
+            presentedCode: this.presentedCode
+          })
+      }
+    },
+    computed: {
+        
+    },
+    onLoad(params){
+        console.log('params', params)
+        this.presentedCode = params.presentedCode
+        this.getGiveOrder({
+          presentedCode: presentedCode
+        }).then(res => {
+          console.log('res', res)
+        })
+    }
+  })
+</script>
+<style lang="stylus">
+ 
+.order-list
+    background pink
+    height 80px
+    width 100% 
+    color white
+    &:not(:first-child)
+      margin-top 10px
+</style>
+<script type="application/json">
+  {
+    "navigationBarTitleText": "认领田地",
+    "usingComponents": {
+    }
+  }
+</script>

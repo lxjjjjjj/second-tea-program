@@ -1,11 +1,11 @@
 <template>
     <view class="app-image addrList-wrapper">
         <view class="addrList-title"></view>
-        <view class="addrList-item" wx:if="{{addrList && addrList.length}}" wx:for="{{addrList}}" wx:key="index">
+        <view class="addrList-item" wx:if="{{addrList && addrList.length}}" wx:for="{{addrList}}" wx:key="index" bindtap="selectAddress(item)">
             <view class="addrList-piece-one">
                 <view class="addrList-item-type" wx:if="{{item.type}}"/>
                 <view class="addrList-item-address" style="{{item.type ? 'width:200px;margin-left: 7px;' : 'width:238px'}}">{{item.provinceName}} {{item.cityName}} {{item.areaName}} {{item.address}}</view>
-                <view class="addrList-item-edit" bindtap="editAddr(item.id)"/>
+                <view class="addrList-item-edit" catchtap="editAddr(item.id)"/>
             </view>
             <view class="addrList-piece-two">
                 <view class="addrList-item-consignee">{{item.consignee}}</view>
@@ -29,6 +29,7 @@
       },
       methods:{
         ...store.mapActions(['getUserAddrList']),
+        ...store.mapMutations(['setSelectAddr']),
         newAddr(){
             mpx.navigateTo({
                 url: addressPage
@@ -38,6 +39,13 @@
             mpx.navigateTo({
                 url: `${addressPage}?id=${id}`
             })
+        },
+        selectAddress(address){
+            const lastPage = getCurrentPages()[getCurrentPages().length - 2].route
+            if(lastPage === "pages/pay"){
+                this.setSelectAddr(address)
+                mpx.navigateBack()
+            }
         }
       },
     onShow(){
@@ -46,6 +54,7 @@
             pageSize:10,
             isNew:true
         })
+        this.setSelectAddr(null)
     },
     onReachBottom: function() {
         this.getUserAddrList({

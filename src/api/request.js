@@ -3,10 +3,10 @@ import LoginPage from '../pages/login?resolve'
 import oopsPage from '../pages/oops?resolve'
 export default ({url,params,method="GET"}) => {
     return new Promise((resolve,reject)=>{
-        // wx.showLoading({
-        //     title: '加载中',
-        //     mask: true
-        // })
+        wx.showLoading({
+            title: '加载中',
+            mask: true
+        })
         wx.request({
             url: url,
             data: params,
@@ -16,11 +16,11 @@ export default ({url,params,method="GET"}) => {
                 'authorization':`${wx.getStorageSync('token')}`
             },
             success (res) {
-                // wx.hideLoading()
+                wx.hideLoading()
                 if (res.statusCode === 403) {
-                    // mpx.navigateTo({
-                    //     url: LoginPage
-                    // })
+                    mpx.navigateTo({
+                        url: LoginPage
+                    })
                 } else if(String(res.statusCode).startsWith('5')){
                     mpx.navigateTo({
                         url: oopsPage
@@ -31,10 +31,10 @@ export default ({url,params,method="GET"}) => {
             },
             fail (reason) {
                 console.log('reason',reason)
-                // wx.hideLoading()
-                // mpx.navigateTo({
-                //     url: LoginPage
-                // })
+                wx.hideLoading()
+                mpx.navigateTo({
+                    url: LoginPage
+                })
                 reject(reason)
             }
         })

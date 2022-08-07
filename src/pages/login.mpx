@@ -72,7 +72,7 @@
                                         mpx.login({
                                             success (res) {
                                                 if (res.code) {
-                                                    store.dispatch('Login',{ code: res.code })
+                                                    store.dispatch('Login',{ code: res.code, type: 2 })
                                                     store.commit('setPhoneNumberShow',true)
                                                 } else {
                                                     wx.showToast({

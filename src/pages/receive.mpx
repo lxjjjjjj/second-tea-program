@@ -3,7 +3,6 @@
       <view class="order-list" wx:if="{{orderInfo}}">
         <view>地块名称：{{orderInfo.orderName}}</view>
         <view>购买总数:{{orderInfo.num}}</view>
-        <view>购买金额:{{orderInfo.totalText}}</view>
       </view>
       <view class="receive" bindtap="receive">领取</view>
   </view>
@@ -15,7 +14,8 @@
   
   createPage({
     data: {
-      presentedCode: ''
+      presentedCode: '',
+      orderInfo: null
     },
     methods: {
       ...store.mapActions(['receiveOrder','getGiveOrder']),
@@ -30,17 +30,24 @@
     },
     onLoad(params){
         console.log('params', params)
-        this.presentedCode = params.presentedCode
+        this.presentedCode = params.id
+        console.log('this.presentedCode', this.presentedCode)
         this.getGiveOrder({
-          presentedCode: presentedCode
+          presentedCode: this.presentedCode 
         }).then(res => {
           console.log('res', res)
+          this.orderInfo = res
         })
     }
   })
 </script>
 <style lang="stylus">
- 
+.receive
+  width 200px
+  background pink
+  height 40px
+  border-radius 10px
+  margin-top 20px
 .order-list
     background pink
     height 80px

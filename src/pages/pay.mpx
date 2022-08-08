@@ -2,11 +2,11 @@
   <view class="app-image field">
       <view class="field-select-num">
         <view class="text">选择</view>
-        <input class="input" type='number' wx:model="{{num || orderPayInfo.num}}"/>
+        <input class="input" type='number' wx:model="{{num || showInfo.num}}"/>
         <view class="text">块</view>
       </view>
-      <view class="select-address" bindtap="selectField" wx:if="{{!seletedAddr || orderPayInfo}}">{{seletedAddr ? '当前地址' : '选择地址'}}</view>
-      <view class="selected-address" wx:if="{{seletedAddr || orderPayInfo}}">{{seletedAddr.provinceName || orderPayInfo.provinceName}} {{seletedAddr.cityName || orderPayInfo.cityName}} {{seletedAddr.areaName || orderPayInfo.areaName}} {{seletedAddr.address || orderPayInfo.address}}</view>
+      <view class="select-address" bindtap="selectField">{{showInfo ? '当前地址' : '选择地址'}}</view>
+      <view class="selected-address" wx:if="{{showInfo}}">{{showInfo.provinceName}} {{showInfo.cityName}} {{showInfo.areaName}} {{showInfo.address}}</view>
       <view class="confirm" bindtap="confirm">确认</view>
   </view>
 </template>
@@ -23,7 +23,10 @@
         orderPayInfo: null
     },
     computed:{
-        ...store.mapState(['seletedAddr'])
+        ...store.mapState(['seletedAddr']),
+        showInfo(){
+            return this.seletedAddr || this.orderPayInfo
+        }
     },
     methods: {
       ...store.mapMutations(['setSelectAddr']),
@@ -77,12 +80,25 @@
         }
     },
     onLoad(params) {
-      console.log('params', params)
       this.teaParcelNo = params?.teaParcelNo
-      params?.id && this.getOrderPayInfo({
-          orderNo: params.id
+      this.orderPayInfo = params
+      params?.orderNo && this.getOrderPayInfo({
+          orderNo: params.orderNo
       }).then(res=>{
-          this.orderPayInfo = res
+          wx.requestPayment({
+            timeStamp: res.timeStamp,
+            nonceStr: res.nonceStr,
+            package: res.packageStr,
+            paySign: res.paySign,
+            signType: res.signType,
+            appId: res.appId,
+            success:()=>{
+                console.log('支付成功')
+            },
+            fail:(error)=>{
+                console.log('支付失败', error)
+            }
+        })
       })
       this.setSelectAddr(null)
     },
@@ -105,6 +121,7 @@
     .input
         height 40px
         width 80px
+        color white
 .select-address
     width 200px
     height 40px

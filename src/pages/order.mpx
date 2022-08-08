@@ -4,8 +4,9 @@
         <view>地块名称：{{item.orderName}}</view>
         <view>购买总数:{{item.num}}</view>
         <view>购买金额:{{item.totalText}}</view>
-        <button bindtap="give(item)" class="btn" open-type="share">赠送</button>
-        <view bindtap="payOrder(item)" class="btn">{{item.status ? '待支付' : '已支付'}}</view>
+        <button bindtap="give(item)" class="btn" open-type="share" wx:if="{{item.presentedStatus === 1}}">赠送</button>
+        <view class="btn" wx:else>已赠送</view>
+        <view bindtap="payOrder(item)" class="btn">{{item.statusText}}</view>
       </view>
   </view>
 </template>
@@ -25,9 +26,10 @@
         this.order = order
       },
       payOrder(order){
-        //   if(order.status === 0) return
+        if(order.status === 2 || order.status === 3) return
+        const params = formatParams(order)
           mpx.navigateTo({
-            url: `${payPage}?id=${order.orderNo}`
+            url: `${payPage}?${params}`
           })
       }
     },
@@ -50,10 +52,12 @@
             this.giveOrder({
                 orderNo: this.order.orderNo
             }).then(res => {
-                resolve({
+                res && resolve({
                     title: '一起成为农场主',
                     path: `/pages/receive?id=${res.presentedCode}`,
                 })
+            }).catch(err => {
+                console.log('a a a赠送订单失败')
             })
         })
         return {

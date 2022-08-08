@@ -113,11 +113,18 @@ export function setSelectAddr(state, data){
   state.seletedAddr = data
 }
 export function setOrderList(state, data){
+  const statusMap = {
+    0: '待支付',
+    1: '支付超时',
+    2: '认养成功',
+    3: '已发货'
+  }
+  data.map(item => {
+    item.statusText = statusMap[item.status]
+  })
   state.orderList = data
 }
-export function setGiveOrder(state, data){
-  state.giveOrder = data
-}
+
 export function setOrderPayInfo(state, data){
   state.orderPayInfo = data
 }

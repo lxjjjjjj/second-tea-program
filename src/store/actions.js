@@ -32,7 +32,7 @@ export function getHomeList(context, params){
     })
 }
 export function Login(context, params){
-    request({
+    return request({
         url:apis.loginAPI,
         params
     }).then(res=>{
@@ -45,6 +45,7 @@ export function Login(context, params){
             })
         }else{
             wx.setStorageSync('token',res.data.token)
+            return Promise.resolve(res.data.token)
         }
     }).catch(err=>{
         console.log('登陆失败',err)
@@ -681,9 +682,9 @@ export function getOrderList(context, params){
     })
 }
 export function getGiveOrder(context, params){
-    context.commit('setGiveOrder', null)
-    request({
+    return request({
         url:`${apis.getGiveOrderAPI}`,
+        params: params,
         method:'POST'
     }).then(res => {
         if(Number(res.code)){
@@ -693,7 +694,7 @@ export function getGiveOrder(context, params){
                 showCancel:false
             })
         }else{
-            context.commit('setGiveOrder',res.data)
+            return Promise.resolve(res.data)
         }
     }).catch(err => {
         console.log('获取赠送订单详情失败',JSON.stringify(err))
@@ -732,12 +733,13 @@ export function giveOrder(context, params){
                 title:res.msg,
                 showCancel:false
             })
+            return Promise.reject()
         }else{
             wx.showModal({
                 title:'赠送订单成功',
                 showCancel:false
             })
-            Promise.resolve(res.data)
+            return Promise.resolve(res.data)
         }
     }).catch(err => {
         console.log('赠送订单失败',JSON.stringify(err))
@@ -747,6 +749,7 @@ export function receiveOrder(context, params){
     context.commit('setReceiveOrder', null)
     request({
         url:`${apis.receiveOrderAPI}`,
+        params: params,
         method:'POST'
     }).then(res => {
         if(Number(res.code)){

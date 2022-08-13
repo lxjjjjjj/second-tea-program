@@ -126,6 +126,8 @@ createPage({
             if (type === 'mobile') this.isRightNumber = true
         },
         newAddress(){
+            this.consignee = this.consignee.trim();
+            this.address = this.address.trim();
             this.rulesMap.consignee = !this.consignee
             this.rulesMap.mobile = !this.mobile
             this.rulesMap.address = !this.address

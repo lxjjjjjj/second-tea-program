@@ -2,7 +2,7 @@
   <view class="app-image field">
       <view class="field-select-num">
         <view class="text">选择</view>
-        <input class="input" type='number' wx:model="{{num || showInfo.num}}"/>
+        <input class="input" type='number' wx:model="{{num}}"/>
         <view class="text">块</view>
       </view>
       <view class="select-address" bindtap="selectField">{{showInfo ? '当前地址' : '选择地址'}}</view>
@@ -70,10 +70,16 @@
                     signType: res.signType,
                     appId: res.appId,
                     success:()=>{
-                        console.log('支付成功')
+                        wx.showModal({
+                            title:'支付成功',
+                            showCancel:false
+                        })
                     },
                     fail:(error)=>{
-                        console.log('支付失败', error)
+                        wx.showModal({
+                            title:'支付失败',
+                            showCancel:false
+                        })
                     }
                 })
             })
@@ -82,10 +88,11 @@
     onLoad(params) {
       this.teaParcelNo = params?.teaParcelNo
       this.orderPayInfo = params
+      this.num = params.num || 1
       params?.orderNo && this.getOrderPayInfo({
           orderNo: params.orderNo
       }).then(res=>{
-          wx.requestPayment({
+          res && wx.requestPayment({
             timeStamp: res.timeStamp,
             nonceStr: res.nonceStr,
             package: res.packageStr,

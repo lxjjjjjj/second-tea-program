@@ -10,7 +10,8 @@
             <view class="address-phone">电话</view>
             <input maxlength="11" class="address-phone-input" type="number" wx:model="{{mobile}}" bindfocus="bindfocus('mobile')"/>
         </view>
-        <view class="address-user-danger" wx:if="{{rulesMap.mobile || isRightNumber}}">{{isRightNumber ? '电话格式错误':'电话不能为空'}}</view>
+        <view class="address-user-danger" wx:if="{{rulesMap.mobile}}">电话不能为空</view>
+        <view class="address-user-danger" wx:if="{{!rulesMap.mobile && !isRightNumber}}">电话格式错误</view>
         <view class="address-local-wrapper">
             <view class="address-local">所在地区</view>
             <picker mode="multiSelector" range="{{showArray}}" bindchange="regionChange" range-key="areaName" bindcolumnchange="columnchange">
@@ -51,7 +52,7 @@ createPage({
         address: '',
         mobile: '',
         consignee: '',
-        isRightNumber: false,
+        isRightNumber: true,
         rulesMap: {
             address: false,
             mobile: false,
@@ -118,24 +119,20 @@ createPage({
                     this.region[index] = this.showArray[index][item].areaName
                 }
             })
-            // this.$forceUpdate()
+            this.$forceUpdate()
         },
         bindfocus(type){
             this.rulesMap[type] = false
+            if (type === 'mobile') this.isRightNumber = true
         },
         newAddress(){
-            if (!this.consignee) {
-                this.rulesMap.consignee = true
-            }
-            if (!this.mobile) {
-                this.rulesMap.mobile = true
-            }
-            if (!this.address) {
-                this.rulesMap.address = true
-            } else if (!/^1(3[0-9]|5[012356789]|7[678]|8[0-9])(?=\d{8}$)/g.test(this.mobile)){
-                this.isRightNumber = true
-            }
-            if(this.consignee && this.mobile && this.address && !this.isRightNumber) {
+            this.consignee = this.consignee.trim();
+            this.address = this.address.trim();
+            this.rulesMap.consignee = !this.consignee
+            this.rulesMap.mobile = !this.mobile
+            this.rulesMap.address = !this.address
+            this.isRightNumber = /^1(3[0-9]|5[012356789]|7[678]|8[0-9])(?=\d{8}$)/g.test(this.mobile)
+            if (this.consignee && this.mobile && this.address && this.isRightNumber) {
                 this.addrId ? this.updateUserAddrById({
                     areaName: this.region[2],
                     areaId:this.regionId[2],

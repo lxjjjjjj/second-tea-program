@@ -1,6 +1,6 @@
 <template>
   <view class="field" bind:tap="pageTapClick">
-    <canvas type="2d" id="myCanvas" canvas-id="myCanvas"></canvas>
+    <canvas type="2d" id="myCanvas"></canvas>
     <view
       id="maskGrey"
       class="mask_grey"
@@ -105,6 +105,7 @@
             .fields({ node: true, size: true })
             .exec((res) => {
               const canvas = res[0].node
+              console.log("canvas", canvas)
               const ctx = canvas.getContext('2d')
               // 初始化画布大小
               canvas.width = res[0].width
@@ -138,7 +139,7 @@
         })
       },
       selectField(){
-        this.setSelectFieldID(this.selectedField.id) 
+        this.setSelectFieldID(this.selectedField.id)
         mpx.navigateTo({
           url: `${payPage}?teaParcelNo=${this.selectedField.id}`,
         })
@@ -157,7 +158,6 @@
     position absolute
     top -1300rpx
     left -900rpx
-    z-index -99
   .field .img_bg
     position absolute
     width 750rpx
